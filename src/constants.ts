@@ -10,7 +10,8 @@ export const MANGO_PUBLIC_KEY: PublicKey = new PublicKey("P1EGQ7vz7mYdNgm2J6ANti
 
 // TRADING VARS
 export const SOL_PERP_INDEX: number = 3;
-export const SOL_QUANTITY: number = 0.01;
+export const SOL_QUANTITY: number = 0.1;
 export const USDC_PRICE_REFERENCE: number = 0.10;
-export const NUMBER_OF_TRADES: number = 5;
+export const NUMBER_OF_TRADES: number = 1;
 export const PERP_TRADES_API: string = `https://event-history-api.herokuapp.com/perp_trades/${MANGO_PUBLIC_KEY}`;
+export const RELOAD_DELAY: number = 60;

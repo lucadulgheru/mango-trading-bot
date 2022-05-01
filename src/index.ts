@@ -1,15 +1,11 @@
 import {
-  Config,
-  getMarketByBaseSymbolAndKind,
   GroupConfig,
   MangoClient,
-  IDS,
   MangoAccount,
   PerpMarket,
   PerpOrder,
   MangoGroup,
   MangoCache,
-  Payer,
   MarketConfig,
   PerpAccount
 } from '@blockworks-foundation/mango-client';
@@ -20,20 +16,24 @@ import * as tradingUtils from './tradingUtils';
 import { TradeSide, MarketType } from './types';
 import { ParsedFillEvent } from '@blockworks-foundation/mango-client/lib/src/PerpMarket';
 
-async function main() {
+async function main(): Promise<void> {
 
   // Init phase
   const [groupConfig, connection, client]: [GroupConfig, Connection, MangoClient] = mangoUtils.initMangoClient();
   const [mangoGroup, perpMarket, perpMarketConfig]: [MangoGroup, PerpMarket, MarketConfig] = await mangoUtils.initPerpMarket(groupConfig, client, connection);
-  const mangoAccount: MangoAccount = (await mangoUtils.getMangoAccounts(constants.USER_KEYPAIR.publicKey, client, mangoGroup))[0];
-  const mangoCache: MangoCache = await mangoGroup.loadCache(connection);
-  const perpAccount: PerpAccount = mangoAccount.perpAccounts[constants.SOL_PERP_INDEX];
+
+  const market: string = process.argv[2];
 
   while (true) {
+
+    const mangoAccount: MangoAccount = (await mangoUtils.getMangoAccounts(constants.USER_KEYPAIR.publicKey, client, mangoGroup))[0];
+    const mangoCache: MangoCache = await mangoGroup.loadCache(connection);
+    const perpAccount: PerpAccount = mangoAccount.perpAccounts[constants.SOL_PERP_INDEX];
 
     // Get the orderbook from Mango
     const [bids, asks] = await mangoUtils.getOrderbook(perpMarket, connection);
     const lowestAskingPrice: number = asks[0][0];
+    const highestBiddingPrice: number = bids[0][0];
 
     const openOrders: PerpOrder[] = await mangoUtils.getOpenOrders(connection, mangoAccount, perpMarket);
     const fills: ParsedFillEvent[] = await perpMarket.loadFills(connection);
@@ -51,7 +51,21 @@ async function main() {
       return order.side == TradeSide.SELL;
     });
 
-    await tradingUtils.sleep(60);
+    if (market === MarketType.BEAR) {
+      try {
+        await tradingUtils.bearTrading(buyOrders, sellOrders, highestBiddingPrice, client, mangoGroup, mangoAccount, mangoCache, perpMarket, perpAccount, perpTradeHistory, position, connection);
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (market === MarketType.BULL) {
+      try {
+        await tradingUtils.bullTrading(buyOrders, sellOrders, lowestAskingPrice, client, mangoGroup, mangoAccount, mangoCache, perpMarket, perpAccount, perpTradeHistory, position, connection);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    await tradingUtils.sleep(constants.RELOAD_DELAY);
   }
 
 }

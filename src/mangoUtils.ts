@@ -13,7 +13,10 @@ import {
   MarketConfig
 } from '@blockworks-foundation/mango-client';
 import { Commitment, Connection, PublicKey } from '@solana/web3.js';
+import { fetch } from "cross-fetch";
 import * as constants from './constants';
+import { getTransactionConfirmation } from './tradingUtils';
+import { TradeSide } from './types';
 
 export function initMangoClient(): [GroupConfig, Connection, MangoClient] {
   const config = new Config(IDS);
@@ -89,21 +92,28 @@ export async function placePerpOrder(client: MangoClient,
   mangoGroup: MangoGroup,
   mangoAccount: MangoAccount,
   perpMarket: PerpMarket,
-  side: "buy" | "sell",
+  side: TradeSide.BUY | TradeSide.SELL,
   price: number,
-  quantity: number) {
-  return await client.placePerpOrder2(
-    mangoGroup,
-    mangoAccount,
-    perpMarket,
-    constants.USER_KEYPAIR,
-    side,
-    price,
-    quantity,
-    {
-      orderType: 'postOnly',
-    },
-  );
+  quantity: number,
+  connection: Connection) {
+  try {
+    return await client.placePerpOrder2(
+      mangoGroup,
+      mangoAccount,
+      perpMarket,
+      constants.USER_KEYPAIR,
+      side,
+      price,
+      quantity,
+      {
+        orderType: 'postOnlySlide',
+      },
+    );
+  }
+  catch (mangoError: any) {
+    await getTransactionConfirmation(mangoError.txid, connection);
+    console.log(mangoError.txid);
+  }
 }
 
 export async function modifyPerpOrder(client: MangoClient,
