@@ -1,12 +1,12 @@
-class Candlestick {
+export class Candlestick {
 
-    private time: number;
+    private time: Date;
     private open: number;
     private high: number;
     private low: number;
     private close: number;
 
-    constructor(time: number, open: number, high: number, low: number, close: number) {
+    constructor(time: Date, open: number, high: number, low: number, close: number) {
         this.time = time;
         this.open = open;
         this.high = high;
@@ -14,23 +14,23 @@ class Candlestick {
         this.close = close;
     }
 
-    getTime() {
+    public getTime() {
         return this.time;
     }
 
-    getOpen() {
+    public getOpen() {
         return this.open;
     }
 
-    getHigh() {
+    public getHigh() {
         return this.high;
     }
 
-    getLow() {
+    public getLow() {
         return this.low;
     }
 
-    getClose() {
+    public getClose() {
         return this.close;
     }
 

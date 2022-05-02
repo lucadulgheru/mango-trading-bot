@@ -15,6 +15,8 @@ import * as mangoUtils from './mangoUtils';
 import * as tradingUtils from './tradingUtils';
 import { TradeSide, MarketType } from './types';
 import { ParsedFillEvent } from '@blockworks-foundation/mango-client/lib/src/PerpMarket';
+import { CoinGeckoClient } from './coingecko/client';
+import { Candlestick } from './coingecko/entity/candlestick';
 
 async function main(): Promise<void> {
 
@@ -70,4 +72,16 @@ async function main(): Promise<void> {
 
 }
 
-main();
+async function test(){
+  // const coingeckoClient: CoinGeckoClient = CoinGeckoClient.getInstance();
+
+  // const candlesticks: Candlestick[] = await coingeckoClient.getCandlesticks();
+
+  // console.log(candlesticks);
+
+  // console.log(await coingeckoClient.getPrice());
+}
+
+// main();
+
+test();

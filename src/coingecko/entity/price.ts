@@ -1,42 +1,59 @@
-class Price {
+export class Price {
 
-    private coin: string;
-    private price: number;
-    private marketCap: number;
-    private volume24H: number;
-    private change24H: number;
-    private lastUpdatedAt: number;
+    private coin!: string;
+    private price!: number;
+    private marketCap!: number;
+    private volume24H!: number;
+    private change24H!: number;
+    private lastUpdatedAt!: number;
 
-    constructor(coin: string, price: number, marketCap: number, volume24H: number, change24H: number, lastUpdatedAt: number) {
+    public constructor(){}
+
+    public setCoin(coin: string){
         this.coin = coin;
-        this.price = price;
-        this.marketCap = marketCap;
-        this.volume24H = volume24H;
-        this.change24H = change24H;
-        this.lastUpdatedAt = lastUpdatedAt;
     }
 
-    getCoin() {
+    public getCoin() {
         return this.coin;
     }
 
-    getPrice() {
+    public setPrice(price: number){
+        this.price = price;
+    }
+
+    public getPrice() {
         return this.price;
     }
 
-    getMarketCap() {
+    public setMarketCap(marketCap: number){
+        this.marketCap = marketCap;
+    }
+
+    public getMarketCap() {
         return this.marketCap;
     }
 
-    getVolume24H() {
+    public setVolume24H(volume24H: number){
+        this.volume24H = volume24H;
+    }
+
+    public getVolume24H() {
         return this.volume24H;
     }
 
-    getChange24H() {
+    public setChange24H(change24H: number){
+        this.change24H = change24H;
+    }
+
+    public getChange24H() {
         return this.change24H;
     }
 
-    getLastUpdatedAt() {
+    public setLastUpdatedAt(lastUpdatedAt: number){
+        this.lastUpdatedAt = lastUpdatedAt;
+    }
+
+    public getLastUpdatedAt() {
         return this.lastUpdatedAt;
     }
 }
